@@ -20,5 +20,7 @@ Five, a loan originates at a particular branch and can be held by one or more co
 for each loan the bank keeps track of the loan amount and loan payments, althoug a loan payment number does not unikely identifya particular
 payment among those for all the banks loans. A payment number does identify a particular payment for specific loan.
 
+
+
 The date and amount are recorded for each payment.
  
