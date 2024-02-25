@@ -3,9 +3,16 @@ import requests
 from bs4 import BeautifulSoup
 import json
 
-
+#Name of class
 class WebScraper:
-
+    """
+    WebScraper is a class designed for extracting information from product pages on the web.
+    
+    Attributes:
+    - url (str): The URL of the product page.
+    - soup (BeautifulSoup): The BeautifulSoup object containing parsed HTML content.
+    """
+    #Initializer
     def __init__(self, url):
         """
         Initializes the WebScraper instance with the given URL.
@@ -15,118 +22,118 @@ class WebScraper:
         """
         self.url = url
         self.soup = None
-
+   #Method for interact with the page
     def _get_page_content(self):
         """
         Retrieves and parses the HTML content of the product page.
         Raises an exception if the status code is not 200.
         """
-        response = requests.get(self.url)
-        if response.status_code == 200:
-            self.soup = BeautifulSoup(response.text, 'html.parser')
-        else:
-            raise Exception(f"Error obtaining page content. Status code: {response.status_code}")
+        try:
+            response = requests.get(self.url)
+            response.raise_for_status()  # Raises HTTPError for bad responses (4xx(clien error) or 5xx(server error))
+            
+            if response.status_code == 200:
+                self.soup = BeautifulSoup(response.text, 'html.parser')
+            else:
+                raise Exception(f"Error obtaining page content. Status code: {response.status_code}")
 
-    def get_name(self):
+        except requests.exceptions.RequestException as e:
+            raise Exception(f"Error during HTTP request: {e}")
+
+    def get_product_name(self):
         """
         Retrieves the product name from the product page.
 
         Returns:
-        - str: The product name.
+        - str: The product name or a default message if not found.
         """
-        title = self.soup.select_one('h1[class*="ui-pdp-title"]')
-        if title:
-            return title.text.strip()
-        else:
-            return "Product title not found."
+        try:
+            title = self.soup.select_one('h1[class*="ui-pdp-title"]')
+            if title:
+                return title.text.strip()
+            else:
+                return "Product title not found."
+        except AttributeError as e:
+            raise Exception(f"Error parsing product name: {e}")
 
-    def get_description(self, max_retries=3):
+    def get_product_description(self):
         """
         Retrieves the product description from the product page.
-        Retries the request up to the specified number of times.
-
-        Parameters:
-        - max_retries (int): The maximum number of retries in case of request failure.
 
         Returns:
-        - str: The product description or None if unsuccessful.
+        - str: The product description or a default message if not found.
         """
-        for _ in range(max_retries):
-            try:
-                response = requests.get(self.url)
-                response.raise_for_status()  # Raises an exception for HTTP errors
-                soup = BeautifulSoup(response.content, 'html.parser')
-
-                description_tag = soup.select_one('div.ui-pdp-container__row.ui-pdp-container__row--description p.ui-pdp-description__content')
-
-                if description_tag:
-                    return description_tag.text.strip()
-                else:
-                    return "No hay una descripción."
-
-            except requests.exceptions.RequestException as e:
-                print(f"Error al hacer la solicitud: {e}")
-
-        print(f"No se pudo obtener la descripción después de {max_retries} intentos.")
-        return None
-
-    def get_images(self):
+        try:
+            description_tag = self.soup.select_one('div.ui-pdp-container__row.ui-pdp-container__row--description p.ui-pdp-description__content')
+            if description_tag:
+                return description_tag.text.strip()
+            else:
+                return "There is not a description."
+        except AttributeError as e:
+            raise Exception(f"Error parsing product description: {e}")
+                 
+    def get_product_images(self):
         """
         Retrieves a list of URLs for product images from the product page.
 
         Returns:
-        - list: List of image URLs.
+        - list: List of image URLs or an empty list if not found.
         """
-        product_images = self.soup.select('div[class="ui-pdp-gallery"] span[class*="ui-pdp-gallery"] figure[class*="ui-pdp-gallery"] img')
-        data_src_list = [img.get('data-zoom') for img in product_images]
-        return data_src_list
-
-    def get_discounts(self):
+        try:
+            product_images = self.soup.select('div[class="ui-pdp-gallery"] span[class*="ui-pdp-gallery"] figure[class*="ui-pdp-gallery"] img')
+            data_src_list = [img.get('data-zoom') for img in product_images]
+            return data_src_list
+        except AttributeError as e:
+            raise Exception(f"Error parsing links of images of product : {e}")
+        
+    def get_product_discounts(self):
         """
         Retrieves the discount information from the product page.
 
         Returns:
-        - str: The discount information or "No hay un descuento" if not found.
+        - str: The product discount or a default message if not found.
         """
-        discount = self.soup.select_one('span[class*="andes-money-amount__discount"]')
-        if discount:
-            return discount.text.strip()
-        else:
-            return "No hay un descuento"
+        try:
+            discount = self.soup.select_one('span[class*="andes-money-amount__discount"]')
+            if discount:
+                return discount.text.strip()
+            else:
+                return "No discounts"
+        except AttributeError as e:
+            raise Exception(f"Error parsing product discount: {e}")   
 
-    def get_price(self):
+    def get_product_price(self):
         """
         Retrieves the product price from the product page.
 
         Returns:
         - str: The product price or None if not found.
         """
-        price_tag = self.soup.select_one('span[class*="andes-money-amount ui-pdp-price__part andes-money-amount--cents-superscript andes-money-amount--compact"]')
-        if price_tag:
-            return price_tag.text.strip()
-        else:
-            return None
+        try:
+           price_tag = self.soup.select_one('span[class*="andes-money-amount ui-pdp-price__part andes-money-amount--cents-superscript andes-money-amount--compact"]')
+           if price_tag:
+             return price_tag.text.strip()
+           else:
+             return None
+        except AttributeError as e:
+            raise Exception(f"Error parsing product price: {e}")
 
     def to_json(self):
         """
         Converts product information to a JSON-formatted string.
 
         Returns:
-        - str: JSON representation of product information.
+        - str: JSON-formatted string representing product information.
         """
-        product_data = {
-            'NAME': self.get_name(),
-            'DESCRIPTION': self.get_description(),
-            'IMAGES': self.get_images(),
-            'DISCOUNTS': self.get_discounts(),
-            'PRICE': self.get_price(),
-        }
-        return json.dumps(product_data, ensure_ascii=False, indent=2)
-
-
-# Example usage:
-url_product = "https://articulo.mercadolibre.com.mx/MLM-916954721-playera-deportiva-casual-slim-fit-spandex-vanquish-v-q-a04-g-_JM#is_advertising=true&position=3&search_layout=grid&type=pad&tracking_id=f0391a18-f294-48c4-86c7-03408dd6d2ef&is_advertising=true&ad_domain=VQCATCORE_LST&ad_position=3&ad_click_id=N2MzYTRmMTktZDNkYy00Nzg3LWFhMTQtZTEwMjk3ZjQxMmJk"
-scraper = WebScraper(url_product)
-scraper._get_page_content()
-product_json = scraper.to_json()
-print(product_json)
+        try:
+            product_data = {
+                'NAME': self.get_product_name(),
+                'DESCRIPTION': self.get_product_description(),
+                'IMAGES': self.get_product_images(),
+                'DISCOUNTS': self.get_product_discounts(),
+                'PRICE': self.get_product_price(),
+            }
+            return json.dumps(product_data, ensure_ascii=False, indent=2)
+       
+        except AttributeError as e:
+            raise Exception(f"Error parsing json: {e}")
