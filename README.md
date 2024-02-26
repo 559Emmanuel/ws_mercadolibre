@@ -55,9 +55,6 @@ sudo dnf install git
 ```
 sudo pacman -S git
 ```
-on
-```
-
 ### Docker
 * Debian/Ubuntu
 ```
