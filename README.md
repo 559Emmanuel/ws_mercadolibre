@@ -157,5 +157,5 @@ exit
 - Implement webdriver for problems when loading the page.
 
 
-## Grades
+## Considerations
 - This project currently usually does not load the description correctly in some Mercado Libre links since to be more precise it is necessary to use a webdriver due to the structure of the page.
