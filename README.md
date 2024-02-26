@@ -30,7 +30,6 @@
 ## Requirements
 - GitHub
 - Bash (Windows)
-- Python 3.7 or Higher
 - Docker (Windows) or Docker Compose (Linux)
 - Postman
 
@@ -38,7 +37,6 @@
 ## **Windows**
 - [GitHub](https://github.com/)
 - [Bash (for Windows)](https://git-scm.com/)
-- [Python](https://www.python.org/) 3.7 or Higher
 - [Docker](https://www.docker.com/get-started)
 - [Postman](https://www.postman.com/downloads/)
 
@@ -57,19 +55,7 @@ sudo dnf install git
 ```
 sudo pacman -S git
 ```
-## Python
-* Debian/Ubuntu
-```
-sudo apt-get update
-sudo apt-get install python3
-```
-* Fedora
-```
-sudo dnf install python3
-```
-* Arch
-```
-sudo pacman -S python
+on
 ```
 
 ### Docker
