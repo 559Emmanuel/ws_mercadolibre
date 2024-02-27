@@ -6,23 +6,20 @@
 *MercadoLibre is an Argentine company headquartered in Montevideo, Uruguay, and incorporated in the United States. It operates online marketplaces dedicated to e-commerce and online auctions. As of 2016, Mercado Libre had 174.2 million users in Latin America, making it the region's most popular e-commerce site by the number of visitors. The company has operations in Argentina, Bolivia, Brazil, Chile, Colombia, Costa Rica, the Dominican Republic, Ecuador, El Salvador, Guatemala, Honduras, Mexico, Nicaragua, Panama, Paraguay, Peru, Uruguay, and Venezuela.*
 
 ## Table of Contents
-* [Introducción](#introduction)
+* [Introduction](#introduction)
 * [Requirements](#requirements)
   * [GitHub](#github)
   * [Bash (Windows)](#bash-windows)
-  * [Python 3.7 or Higher](#python-37-or-higher)
   * [Docker (Windows) or Docker Compose (Linux)](#docker-windows-or-docker-compose-linux)
   * [Postman](#postman)
 * [Installation](#installation)
   * [Windows](#windows)
     * [GitHub](#github-1)
     * [Bash (for Windows)](#bash-for-windows-1)
-    * [Python](#python-1)
     * [Docker](#docker)
     * [Postman](#postman-1)
   * [Linux](#linux)
     * [GitHub](#github-2)
-    * [Python](#python-2)
     * [Docker](#docker-1)
     * [Postman](#postman-2)
 * [How to Use It?](#how-to-use-it)
@@ -34,13 +31,15 @@
 - Postman
 
 ## Installation
-## **Windows**
-- [GitHub](https://github.com/)
-- [Bash (for Windows)](https://git-scm.com/)
+## **For Windows**
+- [GitHub](https://git-scm.com/downloads)
+- [How to install Git hub](https://youtu.be/4xqVv2lTo40?si=32FsENJNYe_Gjci7)
 - [Docker](https://www.docker.com/get-started)
+- [How to install Docker](https://youtu.be/5nX8U8Fz5S0?si=PsscLa0Y7rSyYRQK)
 - [Postman](https://www.postman.com/downloads/)
+- [How to install Postman](https://youtu.be/Hmn5XeZv-GE?si=ubuOgKHuyTACTh6d)
 
-## **Linux**  
+## **For Linux**  
 #### Github
 * Debian/Ubuntu
 ```
@@ -92,37 +91,61 @@ yay -S postman-bin
 
 ## How to Use it?
 To use ws_mercadolibre code, first:
-1. move to your work space in your bash or teminal and clone the repository.
-   
+1. Open your bash(windows, find bash in your application finder) or terminal(if you are in linux, open terminal with [ctrl][alt] [t]) and move to Documents like this example.
+   ![Screenshot_2024-02-26-22-53-57_1920x1080](https://github.com/559Emmanuel/ws_mercadolibre/assets/148989137/de40b17e-c8e3-48aa-92b3-c87cef5e1d3b)
+
+2. Once you're over there copy this and paste it in your terminal or bash.
 ```
 git clone https://github.com/559Emmanuel/ws_mercadolibre.git
 ```
-2. Once you have the repository cloned, open the repository.
+![Screenshot_2024-02-26-23-00-20_1920x1080](https://github.com/559Emmanuel/ws_mercadolibre/assets/148989137/1ecf87db-1d2f-48de-b17c-71d7b3549c83)
+
+3. Once you have the repository cloned, open the repository with this:
 ```
 cd ws_mercadolibre
 ```
-3. Now,go to put it in docker.
+![Screenshot_2024-02-26-23-05-03_1920x1080](https://github.com/559Emmanuel/ws_mercadolibre/assets/148989137/e3a4fe96-199a-4d87-9fa9-3040e5026aa1)
+
+4. After paste this in your terminal.
+```
+git checkout Feature/Scrap_by_link 
+```
+![Screenshot_2024-02-26-23-06-30_1920x1080](https://github.com/559Emmanuel/ws_mercadolibre/assets/148989137/c6465f00-c15d-41da-89af-220beeef773e)
+
+5. Now,go to put it in docker.
 ```
 docker compose build
 ```
-4. Run our container.
+![Screenshot_2024-02-26-23-07-51_1920x1080](https://github.com/559Emmanuel/ws_mercadolibre/assets/148989137/3eca3585-1bf8-444b-96d3-d74e75d8886e)
+
+6. Run our container.
 ```
 docker compose up
 ```
 ![Screenshot_2024-02-25-15-31-12_1920x1080](https://github.com/559Emmanuel/ws_mercadolibre/assets/148989137/81298c4e-f148-4076-86cc-daeb9aac073d)
 
-5. Copy the first link and paste it in Postman with/scraper, and in the part of the body (raw), you will put a JSON with the link of the MercadoLibre product like this image.
+7. Copy the first link and paste it in Postman with/scraper, and in the part of the body (raw), you will put a JSON with the link of the MercadoLibre product like this image.
 ![Screenshot_2024-02-25-15-39-07_1920x1080](https://github.com/559Emmanuel/ws_mercadolibre/assets/148989137/0b96b30b-a715-454f-9250-2edc276ed149)
 
-6. Check that the type of method in Postman is set as POST. After all that, give a click in SEND.
+8. Check that the type of method in Postman is set as POST. After all that, give a click in SEND.
 ![Screenshot_2024-02-25-15-52-55_1920x1080](https://github.com/559Emmanuel/ws_mercadolibre/assets/148989137/f40270c5-b60e-4a42-a79e-c63e8fc68d4c)
 
-7. It is done. To exit, execute this:
+9. It is done. To exit, execute this:
 ```
 ctrl c
+```
+![Screenshot_2024-02-26-23-09-26_1920x1080](https://github.com/559Emmanuel/ws_mercadolibre/assets/148989137/bdcc8928-1700-41a7-b9a4-42e8c37d1bf6)
+
+```
 docker compose down
+```
+![Screenshot_2024-02-26-23-11-04_1920x1080](https://github.com/559Emmanuel/ws_mercadolibre/assets/148989137/15d9ff64-a0a9-4ee3-9a0d-736ca8145278)
+```
 exit
 ```
+
+
+
 
 ## How Was It Developed?
 *ws_mercadolibre has a request-based structure; it initiates an HTTP request using the BeautifulSoup library. BeautifulSoup loads the page, and once the page is loaded, the request library looks for the selectors to extract what is located in them. For example:*
@@ -142,3 +165,10 @@ exit
 
 ## Considerations
 - This project currently usually does not load the description correctly in some Mercado Libre links since to be more precise it is necessary to use a webdriver due to the structure of the page.
+
+## Collaborators
+* Emmanuel Carmona Altamirano
+* Alan Leonardo Mendoza Xicontencatl
+* Ana Paula Ramirez Romero
+* Alan Alberto Valbuena Novelo
+* Paulina Chiquete Ayala
