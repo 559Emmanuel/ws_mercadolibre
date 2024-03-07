@@ -1,8 +1,6 @@
-# Libraries
 import requests
 from bs4 import BeautifulSoup
 import json
-
 
 class WebScraper:
 
@@ -13,16 +11,16 @@ class WebScraper:
         Parameters:
         - url (str): The URL of the product page.
         """
-        self.url1 = url
+        self.url = url
         self.soup = None
-        self.url_item = None
+        self.url_item = []
 
     def _get_page_content(self):
         """
         Retrieves and parses the HTML content of the product page.
         Raises an exception if the status code is not 200.
         """
-        response = requests.get(self.url1)
+        response = requests.get(self.url)
         if response.status_code == 200:
             self.soup = BeautifulSoup(response.text, 'html.parser')
         else:
@@ -107,16 +105,26 @@ class WebScraper:
             return price_tag.text.strip()
         else:
             return None
-    
-    def get_urls(self):
-    
-        box = self.soup.find_all("li", class_="ui-search-layout__item")
-        for item in box:
-            links = item.find_all('a')
 
-            for link in links:
-                self.url_item = link.get('href')  
-                return self.url_item
+    def get_urls(self):
+        response = requests.get(self.url)
+        if response.status_code == 200:
+            self.soup = BeautifulSoup(response.text, 'html.parser')
+            box = self.soup.find_all("li", class_="ui-search-layout__item")
+                   
+            for box in box:
+                links = box.find_all('a')
+
+                for link in links:
+                    url_item = link.get('href')
+                    if url_item.startswith("https://listado"):
+                        continue
+                    else:
+                        self.url_item.append(url_item)
+
+            return self.url_item
+        else:
+            raise Exception(f"Error obtaining page content. Status code: {response.status_code}")
 
     def to_json(self):
         """
@@ -136,9 +144,14 @@ class WebScraper:
 
 
 # Example usage:
-url_product = "https://articulo.mercadolibre.com.mx/MLM-916954721-playera-deportiva-casual-slim-fit-spandex-vanquish-v-q-a04-g-_JM#is_advertising=true&position=3&search_layout=grid&type=pad&tracking_id=f0391a18-f294-48c4-86c7-03408dd6d2ef&is_advertising=true&ad_domain=VQCATCORE_LST&ad_position=3&ad_click_id=N2MzYTRmMTktZDNkYy00Nzg3LWFhMTQtZTEwMjk3ZjQxMmJk"
+url_product = "https://listado.mercadolibre.com.mx/playera"
 scraper = WebScraper(url_product)
-scraper._get_page_content()
-product_json = scraper.to_json()
-print(product_json)
+scraper.get_urls()
+urls = scraper.get_urls()
+i = 0
 
+for i in range(len(urls)):
+    scraper_data = WebScraper(urls[i])  # Tomar la primera URL de la lista de URLs
+    scraper_data._get_page_content()  # Obtener el contenido de la página
+    print(scraper_data.to_json())  # Imprimir la información en formato JSON
+    i=+1
